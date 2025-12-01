@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1eedec388ccce6342a3480c5b6dec33a
+guid: 5ec837aa3d5c9ce4083f8b2383e0205b
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Cairo
+  - Rubik
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
