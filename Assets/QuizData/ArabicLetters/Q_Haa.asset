@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bdc1743b25e0ef4ebba369582a53b68, type: 3}
+  m_Name: Q_Haa
+  m_EditorClassIdentifier: Assembly-CSharp::QuestionData
+  signImage: {fileID: 7222512949768943828, guid: 1ef0d2ab957b8a349b2920d2a9573d45, type: 3}
+  choices:
+  - "\u0633"
+  - "\u062D"
+  - "\u0648"
+  - "\u0645"
+  correctIndex: 1
