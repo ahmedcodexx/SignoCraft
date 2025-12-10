@@ -15,208 +15,285 @@ public class QuizManager : MonoBehaviour
     public TMP_Text scoreText;
     public TMP_Text questionNumberText;
     public TMP_Text levelText;
+
+    // ===== TIMER =====
+    [Header("Timer")]
+    public TMP_Text timerText;        // UI Text للوقت
+    public float totalTime = 600f;    // 10 دقايق = 600 ثانية
+    private float timer;
+    private bool timerRunning = false;
+
+    [Header("Panels")]
+    public GameObject Startgame;
+    public GameObject MainMenu;
     public GameObject levelCompletePanel;
     public TMP_Text levelCompleteText;
 
+    [Header("Main Menu Buttons")]
+    public Button level2Button;
+
     [Header("Settings")]
     public float feedbackDuration = 0.8f;
+    public int minScoreForLevel2 = 20;
 
     [Header("Levels Questions")]
-    public QuestionData[] numberQuestions; // Level 0
-    public QuestionData[] letterQuestions; // Level 1
+    public QuestionData[] numberQuestions;
+    public QuestionData[] letterQuestions;
 
-    private QuestionData[] questions; // الأسئلة الحالية
+    private QuestionData[] questions;
     private int currentIndex = 0;
     private int score = 0;
     private int currentCorrectIndexInUI;
-    private string[] currentChoices;
+    private int currentLevel = 0;
+    private bool level1Unlocked = false;
 
-    private int currentLevel = 0; // 0 = numbers, 1 = letters
-    private const int letterQuestionsLimit = 10; // عدد أسئلة Level 1
+    private const int letterQuestionsLimit = 10;
 
+    // ================= START =================
     void Start()
     {
-        StartLevel(0); // ابدأ بالـNumbers
+        Startgame.SetActive(true);
+        MainMenu.SetActive(false);
+        levelCompletePanel.SetActive(false);
+
+        if (level2Button != null)
+            level2Button.interactable = false;
     }
 
+    // زر Start
+    public void OpenMainMenu()
+    {
+        Startgame.SetActive(false);
+        MainMenu.SetActive(true);
+
+        if (level2Button != null)
+            level2Button.interactable = level1Unlocked;
+    }
+
+    // ================= MAIN MENU =================
+    public void PlayLevel1()
+    {
+        MainMenu.SetActive(false);
+        StartLevel(0);
+    }
+
+    public void PlayLevel2()
+    {
+        if (!level1Unlocked)
+        {
+            feedbackText.text =
+                $"يجب الحصول على {minScoreForLevel2} نقطة في Level 1 لفتح Level 2";
+            return;
+        }
+
+        MainMenu.SetActive(false);
+        StartLevel(1);
+    }
+
+    // ================= GAME =================
     void StartLevel(int levelIndex)
     {
         currentLevel = levelIndex;
 
-        if (levelIndex == 0)
-        {
-            questions = numberQuestions;
-        }
-        else if (levelIndex == 1)
-        {
-            questions = GetRandomSubset(letterQuestions, letterQuestionsLimit);
-        }
+        questions = (levelIndex == 0)
+            ? numberQuestions
+            : GetRandomSubset(letterQuestions, letterQuestionsLimit);
 
         currentIndex = 0;
         score = 0;
         UpdateScoreUI();
 
+        // RESET TIMER
+        timer = totalTime;
+        timerRunning = true;
+        StopAllCoroutines();
+        StartCoroutine(TimerCountdown());
+
         if (levelText != null)
             levelText.text = "Level " + (currentLevel + 1);
-
-        if (levelCompletePanel != null)
-            levelCompletePanel.SetActive(false);
 
         ShuffleQuestions();
         LoadQuestion(currentIndex);
     }
 
+    // ===== TIMER SYSTEM =====
+    IEnumerator TimerCountdown()
+    {
+        while (timerRunning && timer > 0)
+        {
+            timer -= Time.deltaTime;
+
+            int minutes = Mathf.FloorToInt(timer / 60);
+            int seconds = Mathf.FloorToInt(timer % 60);
+
+            timerText.text = $"{minutes:00}:{seconds:00}";
+
+            yield return null;
+        }
+
+        if (timer <= 0)
+        {
+            timerRunning = false;
+            GameOverTimeUp();
+        }
+    }
+
+    void GameOverTimeUp()
+    {
+        levelCompletePanel.SetActive(true);
+        levelCompleteText.text = $"Time's Up! ⏳\nScore: {score}";
+        timerRunning = false;
+    }
+
     QuestionData[] GetRandomSubset(QuestionData[] source, int count)
     {
         List<QuestionData> list = new List<QuestionData>(source);
-        List<QuestionData> selected = new List<QuestionData>();
 
         for (int i = list.Count - 1; i > 0; i--)
         {
             int r = Random.Range(0, i + 1);
-            var tmp = list[i];
-            list[i] = list[r];
-            list[r] = tmp;
+            (list[i], list[r]) = (list[r], list[i]);
         }
 
-        for (int i = 0; i < Mathf.Min(count, list.Count); i++)
-            selected.Add(list[i]);
-
-        return selected.ToArray();
+        return list.GetRange(0, Mathf.Min(count, list.Count)).ToArray();
     }
 
-    void LoadQuestion(int qIndex)
+    void LoadQuestion(int index)
     {
-        var q = questions[qIndex];
+        QuestionData q = questions[index];
 
-        if (signImage != null)
-            signImage.sprite = q.signImage;
-
-        questionNumberText.text = $"{qIndex + 1} / {questions.Length}";
+        signImage.sprite = q.signImage;
+        questionNumberText.text = $"{index + 1} / {questions.Length}";
         feedbackText.text = "";
 
-        currentChoices = new string[q.choices.Length];
-        q.choices.CopyTo(currentChoices, 0);
-
         List<int> order = new List<int>();
-        for (int i = 0; i < currentChoices.Length; i++) order.Add(i);
+        for (int i = 0; i < q.choices.Length; i++)
+            order.Add(i);
 
         for (int i = order.Count - 1; i > 0; i--)
         {
             int r = Random.Range(0, i + 1);
-            int tmp = order[i];
-            order[i] = order[r];
-            order[r] = tmp;
+            (order[i], order[r]) = (order[r], order[i]);
         }
 
         currentCorrectIndexInUI = -1;
 
-        for (int ui = 0; ui < choiceTexts.Length; ui++)
+        for (int i = 0; i < choiceButtons.Length; i++)
         {
-            if (ui < order.Count)
+            if (i < order.Count)
             {
-                int sourceIndex = order[ui];
-                choiceTexts[ui].text = currentChoices[sourceIndex];
-                choiceButtons[ui].gameObject.SetActive(true);
-                choiceButtons[ui].interactable = true;
+                int src = order[i];
+                choiceTexts[i].text = q.choices[src];
+                choiceButtons[i].interactable = true;
+                choiceButtons[i].gameObject.SetActive(true);
 
-                if (sourceIndex == q.correctIndex)
-                    currentCorrectIndexInUI = ui;
+                if (src == q.correctIndex)
+                    currentCorrectIndexInUI = i;
             }
             else
             {
-                choiceTexts[ui].text = "";
-                choiceButtons[ui].gameObject.SetActive(false);
+                choiceButtons[i].gameObject.SetActive(false);
             }
 
-            ResetButtonVisual(choiceButtons[ui]);
+            ResetButtonVisual(choiceButtons[i]);
         }
     }
 
     public void CheckAnswer(int uiIndex)
     {
-        foreach (var b in choiceButtons)
-            if (b != null) b.interactable = false;
+        if (!timerRunning)
+            return;
+
+        foreach (Button b in choiceButtons)
+            b.interactable = false;
 
         bool correct = (uiIndex == currentCorrectIndexInUI);
 
         if (correct)
         {
             score += 5;
-            StartCoroutine(ShowFeedbackCoroutine("Correct", true, uiIndex));
+            StartCoroutine(ShowFeedback("Correct ✅", true, uiIndex));
         }
         else
         {
-            StartCoroutine(ShowFeedbackCoroutine("Incorrect", false, uiIndex));
+            StartCoroutine(ShowFeedback("Incorrect ❌", false, uiIndex));
         }
 
         UpdateScoreUI();
     }
 
-    IEnumerator ShowFeedbackCoroutine(string message, bool isCorrect, int uiIndex)
+    IEnumerator ShowFeedback(string text, bool isCorrect, int uiIndex)
     {
-        if (choiceButtons != null && uiIndex >= 0 && uiIndex < choiceButtons.Length)
-            SetButtonResultColor(choiceButtons[uiIndex], isCorrect);
+        SetButtonResultColor(choiceButtons[uiIndex], isCorrect);
 
         if (!isCorrect && currentCorrectIndexInUI >= 0)
             SetButtonResultColor(choiceButtons[currentCorrectIndexInUI], true);
 
-        feedbackText.text = message;
+        feedbackText.text = text;
         yield return new WaitForSeconds(feedbackDuration);
 
         currentIndex++;
 
-        if (currentIndex < questions.Length)
-        {
+        if (currentIndex < questions.Length && timerRunning)
             LoadQuestion(currentIndex);
-        }
         else
+            ShowLevelComplete();
+    }
+
+    void ShowLevelComplete()
+    {
+        levelCompletePanel.SetActive(true);
+        levelCompleteText.text =
+            $"Level {currentLevel + 1} Complete 🎉\nScore: {score}";
+
+        timerRunning = false;
+
+        if (currentLevel == 0)
         {
-            if (levelCompletePanel != null)
+            if (score >= minScoreForLevel2)
             {
-                levelCompletePanel.SetActive(true);
-                if (levelCompleteText != null)
-                    levelCompleteText.text = $"Well done! You finished Level {currentLevel + 1}";
+                level1Unlocked = true;
+                if (level2Button != null)
+                    level2Button.interactable = true;
             }
         }
     }
 
     public void NextLevel()
     {
-        if (levelCompletePanel != null)
-            levelCompletePanel.SetActive(false);
+        levelCompletePanel.SetActive(false);
 
-        if (currentLevel >= 1)
+        if (currentLevel == 0)
         {
-            QuizFinished();
-            return;
+            if (score >= minScoreForLevel2)
+                OpenMainMenu();
+            else
+                StartLevel(0);
         }
-
-        StartLevel(currentLevel + 1);
+        else
+        {
+            feedbackText.text = $"Game Over! Final Score: {score}";
+        }
     }
 
+    // ================= UI HELPERS =================
     void UpdateScoreUI()
     {
-        scoreText.text = $"Score: {score}";
-    }
-
-    void QuizFinished()
-    {
-        feedbackText.text = $"Game Over! Score: {score} / {questions.Length}";
+        scoreText.text = "Score: " + score;
     }
 
     void SetButtonResultColor(Button b, bool correct)
     {
-        var colors = b.colors;
-        colors.normalColor = correct ? Color.green : Color.red;
-        b.colors = colors;
+        ColorBlock cb = b.colors;
+        cb.normalColor = correct ? Color.green : Color.red;
+        b.colors = cb;
     }
 
     void ResetButtonVisual(Button b)
     {
-        var colors = b.colors;
-        colors.normalColor = Color.white;
-        b.colors = colors;
+        ColorBlock cb = b.colors;
+        cb.normalColor = Color.white;
+        b.colors = cb;
     }
 
     void ShuffleQuestions()
@@ -224,9 +301,7 @@ public class QuizManager : MonoBehaviour
         for (int i = questions.Length - 1; i > 0; i--)
         {
             int r = Random.Range(0, i + 1);
-            var tmp = questions[i];
-            questions[i] = questions[r];
-            questions[r] = tmp;
+            (questions[i], questions[r]) = (questions[r], questions[i]);
         }
     }
 }
