@@ -3,8 +3,8 @@ guid: 362ccce99551bf64b85f494e7d27255f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3763661576917550664
-    second: JEEM (21)_0
+      213: -75198769549890315
+    second: JEEM_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: JEEM (21)_0
+      name: JEEM_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 863
+        height: 1280
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 84605f273463b3430800000000000000
-      internalID: 3763661576917550664
+      spriteID: 5fcae651e17d4fef0800000000000000
+      internalID: -75198769549890315
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      JEEM (21)_0: 3763661576917550664
+      JEEM_0: -75198769549890315
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

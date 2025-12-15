@@ -3,8 +3,8 @@ guid: 1b73c6c2d77081742a2cc70c5eb33a84
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5008163439130690840
-    second: Aleff (21)_0
+      213: 81251097658077272
+    second: Alif_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Aleff (21)_0
+      name: Alif_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 1200
+        height: 1009
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 815cb7e0d12908540800000000000000
-      internalID: 5008163439130690840
+      spriteID: 850358d5179a02100800000000000000
+      internalID: 81251097658077272
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Aleff (21)_0: 5008163439130690840
+      Alif_0: 81251097658077272
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

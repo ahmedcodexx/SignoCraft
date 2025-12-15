@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bdc1743b25e0ef4ebba369582a53b68, type: 3}
   m_Name: Q_Alif
   m_EditorClassIdentifier: Assembly-CSharp::QuestionData
-  signImage: {fileID: 5008163439130690840, guid: 1b73c6c2d77081742a2cc70c5eb33a84, type: 3}
+  signImage: {fileID: 81251097658077272, guid: 1b73c6c2d77081742a2cc70c5eb33a84, type: 3}
   choices:
   - "\u0628"
   - "\u0633"

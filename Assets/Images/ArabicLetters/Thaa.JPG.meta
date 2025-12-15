@@ -3,8 +3,8 @@ guid: 870c76f5287951242a9ac296275c0bd2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 252976091856839800
-    second: Thaa 1_0
+      213: -1271346820039773957
+    second: Thaa_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Thaa 1_0
+      name: Thaa_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 941
+        height: 1280
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8742bcb4a60c28300800000000000000
-      internalID: 252976091856839800
+      spriteID: bf0f4359dc44b5ee0800000000000000
+      internalID: -1271346820039773957
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Thaa 1_0: 252976091856839800
+      Thaa_0: -1271346820039773957
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
