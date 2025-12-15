@@ -63,6 +63,8 @@ public class QuizManager : MonoBehaviour
     // بتعرض شاشة البداية وتقفل Level 2
     void Start()
     {
+        PlayerPrefs.DeleteAll();    /* متنساش تشيله لما تيجي تسلم  */
+
         ShowStartPanel();
         if (level2Button != null)
         {
@@ -274,9 +276,29 @@ public class QuizManager : MonoBehaviour
         levelCompletePanel.SetActive(true);
         levelCompleteText.text = $"Level {currentLevel + 1} Complete\nScore: {score}";
 
+        SaveStars();
         UnlockLevel2();
     }
+    void SaveStars()
+    {
+        float percent = (float)score / (questions.Length * 10);
 
+        int stars = 0;
+
+        if (percent >= 0.9f)
+            stars = 3;
+        else if (percent >= 0.6f)
+            stars = 2;
+        else if (percent >= 0.4f)
+            stars = 1;
+
+        GameObject levelButton =
+            currentLevel == 0 ? level1Button.gameObject : level2Button.gameObject;
+
+        LevelStars ls = levelButton.GetComponent<LevelStars>();
+        if (ls != null)
+            ls.SetStars(stars);
+    }
     // بتفتح Level 2 لو اللاعب جاب 75% في Level 1
     void UnlockLevel2()
     {
@@ -287,6 +309,7 @@ public class QuizManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("Level2Unlocked", 1);
             level2Button.enabled = true;
+            level2Button.GetComponent<Image>().color = Color.white;
         }
     }
 

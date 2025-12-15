@@ -15,7 +15,7 @@ MonoBehaviour:
   signImage: {fileID: -5383919768932044375, guid: 693126cb8aee7234abbc922492451986, type: 3}
   choices:
   - "\u062B"
-  - "\u0626"
+  - "\u064A"
   - "\u0635"
   - "\u0638"
   correctIndex: 1
