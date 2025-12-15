@@ -31,7 +31,6 @@ public class QuizManager : MonoBehaviour
     public TMP_Text levelText;
     public TMP_Text[] choiceTexts;
     public Button[] choiceButtons;
-    public TMP_Text feedbackText;
     public TMP_Text scoreText;
     public TMP_Text questionNumberText;
     public TMP_Text levelCompleteText;
@@ -205,7 +204,6 @@ public class QuizManager : MonoBehaviour
 
         signImage.sprite = q.signImage;
         questionNumberText.text = $"{index + 1} / {questions.Length}";
-        feedbackText.text = "";
 
         List<int> order = new List<int>();
         for (int i = 0; i < q.choices.Length; i++) order.Add(i);
@@ -354,7 +352,7 @@ public class QuizManager : MonoBehaviour
     void ResetButtonVisual(Button b)
     {
         Color color;
-        ColorUtility.TryParseHtmlString("#35B4C9", out color);
+        ColorUtility.TryParseHtmlString("#2B4A2B", out color);  /*  عاوز ال بيتاع اللون اللي عاوزينه  hexa */
         b.image.color = color;
     }
 
